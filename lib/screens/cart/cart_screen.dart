@@ -1,17 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_files/providers/products_provider.dart';
 
-class CartScreen extends StatefulWidget {
+class CartScreen extends ConsumerStatefulWidget {
   const CartScreen({super.key});
 
   @override
-  State<CartScreen> createState() => _CartScreenState();
+  ConsumerState<CartScreen> createState() => _CartScreenState();
 }
 
-class _CartScreenState extends State<CartScreen> {
+class _CartScreenState extends ConsumerState<CartScreen> {
   bool showCoupon = true;
 
   @override
   Widget build(BuildContext context) {
+    final cartProducts = ref.watch(reducedProducts);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Your Cart'),
@@ -19,11 +23,38 @@ class _CartScreenState extends State<CartScreen> {
         // actions: [],
       ),
       body: Container(
-        padding: const EdgeInsets.all(30),
-        child: const Column(
+        padding: const EdgeInsets.all(10),
+        child: Column(
           children: [
             Column(
-              children: [], // output cart products here
+              children: cartProducts.map((e) {
+                return Container(
+                  padding: const EdgeInsets.only(bottom: 10, top: 10),
+                  color: Colors.blueGrey.withOpacity(0.05),
+                  child: Row(
+                    children: [
+                      Image.asset(
+                        e.image,
+                        width: 60,
+                        height: 60,
+                      ),
+                      SizedBox(width: 10,),
+                      Text(
+                        e.title,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Expanded(child: SizedBox()),
+
+                      Text(
+                          "£${e.price.toString()}"
+                      )
+                    ],
+                  ),
+                );
+              }).toList(), // output cart products here
             ),
 
             // output totals here
