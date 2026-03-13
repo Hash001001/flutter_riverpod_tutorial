@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_files/shared/cart_icon.dart';
 
+import '../../providers/cart_notifier.dart';
 import '../../providers/products_provider.dart';
 
 class HomeScreen extends ConsumerWidget {
@@ -10,6 +11,7 @@ class HomeScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final allProducts = ref.watch(productsProvider);
+    final cartProducts = ref.watch(cartNotifierProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -32,10 +34,12 @@ class HomeScreen extends ConsumerWidget {
               color: Colors.blueGrey.withOpacity(0.05),
               child: Column(
                 children: [
-                  Image.asset(
-                    allProducts[index].image,
-                    width: 60,
-                    height: 60,
+                  Expanded(
+                    child: Image.asset(
+                      allProducts[index].image,
+                      width: 60,
+                      height: 60,
+                    ),
                   ),
                   Text(
                     allProducts[index].title,
@@ -44,9 +48,14 @@ class HomeScreen extends ConsumerWidget {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  Text(
-                    "£${allProducts[index].price.toString()}"
-                  )
+                  Text("£${allProducts[index].price.toString()}"),
+
+                  if (cartProducts.contains(allProducts[index]))
+                    TextButton(onPressed: () {}, child: Text("Remove")),
+
+                  if (!cartProducts.contains(allProducts[index]))
+                    TextButton(onPressed: () {}, child: Text("Add")),
+
                 ],
               ),
             );
