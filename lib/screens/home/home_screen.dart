@@ -37,8 +37,8 @@ class HomeScreen extends ConsumerWidget {
                   Expanded(
                     child: Image.asset(
                       allProducts[index].image,
-                      width: 60,
-                      height: 60,
+                      width: 50,
+                      height: 50,
                     ),
                   ),
                   Text(
@@ -49,13 +49,17 @@ class HomeScreen extends ConsumerWidget {
                     ),
                   ),
                   Text("£${allProducts[index].price.toString()}"),
-
                   if (cartProducts.contains(allProducts[index]))
-                    TextButton(onPressed: () {}, child: Text("Remove")),
+                    TextButton(onPressed: () {
+                      ref.read(cartNotifierProvider.notifier)
+                          .removeProduct(allProducts[index]);
+                    }, child: Text("Remove")),
 
                   if (!cartProducts.contains(allProducts[index]))
-                    TextButton(onPressed: () {}, child: Text("Add")),
-
+                    TextButton(onPressed: () {
+                      ref.read(cartNotifierProvider.notifier)
+                          .addProduct(allProducts[index]);
+                    }, child: Text("Add")),
                 ],
               ),
             );
